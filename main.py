@@ -116,7 +116,7 @@ class App:
         print()
 
         if self.load_config():
-            print_info(f'Config loaded from "{CONFIG_FILE}"')
+            print_info(f'Config loaded from {CONFIG_FILE}')
         else:
             print_info(f'Config file not found ({CONFIG_FILE}), default settings are used.')
 
