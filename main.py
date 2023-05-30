@@ -14,6 +14,8 @@ from functools import partial
 CONFIG_FILE = 'config.env'
 
 
+
+
 def print_colored(color, *args, **kwargs):
     print(color, end='')
     print(*args, **kwargs, end='')
@@ -123,8 +125,11 @@ class App:
         self.save_document()
         print_pos(f'Task delimiter №{self.task_counter} added')
 
-    def add_text_from_clipboard(self):
-        pass
+    def paste_text_from_clipboard(self):
+        text = pyperclip.paste()
+        self.document.add_paragraph(text, style='Body Text')
+        self.save_document()
+        print_pos(f'Text pasted to document: {colorama.Style.RESET_ALL}\n{text}')
 
     def on_screenshot(self):
         self.clear_clipboard()
@@ -154,7 +159,6 @@ class App:
         heading_font.color.rgb = docx.shared.RGBColor(0, 0, 0)
 
     def run(self):
-
         print_colored(colorama.Back.WHITE + colorama.Fore.BLACK, 'SCREEN WRITER')
         print()
 
@@ -167,9 +171,9 @@ class App:
 
         print_info(f'Output file: {self.config.out_file}')
         print_info('Press Ctrl + Q to exit')
-        print_info('Press Ctrl + Shift to create config file')
+        print_info('Press Ctrl + Shift + F to create config file')
         print_info('Press Ctrl + Space to add task delimiter')
-        print_info('Press Ctrl + Shift + V to add text from clipboard')
+        print_info('Press Ctrl + Shift + V to paste text from clipboard')
         print_info('Waiting for Shift + Windows + S...')
 
         self.change_styles()
@@ -177,9 +181,9 @@ class App:
         self.clear_clipboard()
 
         keyboard.add_hotkey('Shift + Windows + s', self.on_screenshot)
-        keyboard.add_hotkey('Ctrl + Shift', self.config.create)
+        keyboard.add_hotkey('Ctrl + Shift + F', self.config.create)
         keyboard.add_hotkey('Ctrl + Space', self.add_task_delimiter)
-        keyboard.add_hotkey('Ctrl + Shift + V', self.add_task_delimiter)
+        keyboard.add_hotkey('Ctrl + Shift + V', self.paste_text_from_clipboard)
         keyboard.wait('Ctrl + Q')
         print_info('Terminating...')
 
