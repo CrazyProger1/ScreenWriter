@@ -65,6 +65,7 @@ class App:
         self.config: Config | None = None
         self.document = docx.Document()
         self.screenshots_counter = 0
+        self.task_counter = 0
 
     @staticmethod
     def clear_clipboard():
@@ -115,6 +116,16 @@ class App:
         except Exception as e:
             print_error_while('saving screenshot to document.', e)
 
+    def add_task_delimiter(self):
+        self.task_counter += 1
+        self.document.add_paragraph(f'Завдання №{self.task_counter}', style='Header')
+        self.align_center_last_paragraph()
+        self.save_document()
+        print_pos(f'Task delimiter №{self.task_counter} added')
+
+    def add_text_from_clipboard(self):
+        pass
+
     def on_screenshot(self):
         self.clear_clipboard()
         self.save_photo_from_clipboard()
@@ -126,6 +137,21 @@ class App:
         if Path(CONFIG_FILE).exists():
             load_dotenv(CONFIG_FILE)
             return True
+
+    def change_styles(self):
+        styles = self.document.styles
+
+        body_text_style = styles['Body Text']
+        paragraph_font = body_text_style.font
+        paragraph_font.name = self.config.font
+        paragraph_font.size = docx.shared.Pt(self.config.font_size)
+
+        heading_style = styles['Header']
+        heading_font = heading_style.font
+        heading_font.name = self.config.font
+        heading_font.size = docx.shared.Pt(self.config.font_size)
+        heading_font.bold = True
+        heading_font.color.rgb = docx.shared.RGBColor(0, 0, 0)
 
     def run(self):
 
@@ -142,17 +168,18 @@ class App:
         print_info(f'Output file: {self.config.out_file}')
         print_info('Press Ctrl + Q to exit')
         print_info('Press Ctrl + Shift to create config file')
+        print_info('Press Ctrl + Space to add task delimiter')
+        print_info('Press Ctrl + Shift + V to add text from clipboard')
         print_info('Waiting for Shift + Windows + S...')
 
-        style = self.document.styles['Body Text']
-        paragraph_font = style.font
-        paragraph_font.name = self.config.font
-        paragraph_font.size = docx.shared.Pt(self.config.font_size)
+        self.change_styles()
 
         self.clear_clipboard()
 
         keyboard.add_hotkey('Shift + Windows + s', self.on_screenshot)
         keyboard.add_hotkey('Ctrl + Shift', self.config.create)
+        keyboard.add_hotkey('Ctrl + Space', self.add_task_delimiter)
+        keyboard.add_hotkey('Ctrl + Shift + V', self.add_task_delimiter)
         keyboard.wait('Ctrl + Q')
         print_info('Terminating...')
 
