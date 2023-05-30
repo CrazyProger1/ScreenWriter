@@ -46,6 +46,15 @@ class Config:
         else:
             self.font_size = 14
 
+    def create(self):
+        with open(CONFIG_FILE, 'w', encoding='utf-8') as cf:
+            cf.write(f'''
+OUT_FILE={self.out_file}
+TEMP_IMAGE_FILE={self.temp_image_file}
+FONT={self.font}
+FONT_SIZE={self.font_size}
+CAPTION={self.caption}''')
+
 
 class App:
     def __init__(self):
@@ -124,6 +133,7 @@ class App:
 
         print_info(f'Output file: {self.config.out_file}')
         print_info('Press Ctrl + Q to exit')
+        print_info('Press Ctrl + Shift to create config file')
         print_info('Waiting for Shift + Windows + S...')
 
         style = self.document.styles['Body Text']
@@ -134,6 +144,7 @@ class App:
         self.clear_clipboard()
 
         keyboard.add_hotkey('Shift + Windows + s', self.on_screenshot)
+        keyboard.add_hotkey('Ctrl + Shift', self.config.create)
         keyboard.wait('Ctrl + Q')
         print_info('Terminating...')
 
