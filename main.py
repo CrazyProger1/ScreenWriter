@@ -32,6 +32,10 @@ def print_neg(*args, **kwargs):
     print_colored(colorama.Fore.RED, '[-]', *args, **kwargs)
 
 
+def print_error_while(while_text: str, error: Exception):
+    print_neg('An error occurred while ' + while_text + f' {error.__class__.__name__}: {error}')
+
+
 @dataclass
 class Config:
     out_file: str = field(default_factory=partial(os.environ.get, 'OUT_FILE', 'out.docx'))
@@ -70,47 +74,51 @@ class App:
         try:
             self.document.save(self.config.out_file)
             return True
-        except PermissionError:
-            print_neg('An error occurred while saving the document, make sure you close the file')
+        except Exception as e:
+            print_error_while('saving the document, make sure you close the file.', e)
 
     def delete_temp_photo(self):
         try:
             os.remove(self.config.temp_image_file)
-        except FileNotFoundError:
+        except (FileNotFoundError, PermissionError):
             pass
 
     def save_photo_from_clipboard(self):
-        img = ImageGrab.grabclipboard()
-        while not img:
-            try:
-                img = ImageGrab.grabclipboard()
-                sleep(0.1)
-            except OSError:
-                pass
         try:
-            img.save(self.config.temp_image_file)
+            img = ImageGrab.grabclipboard()
+            while not img:
+                try:
+                    img = ImageGrab.grabclipboard()
+                    sleep(0.1)
+                except OSError:
+                    pass
+            if img:
+                img.save(self.config.temp_image_file)
         except Exception as e:
-            print_neg(f'An error occurred while saving image from clipboard. '
-                      f'{e.__class__.__name__}: {e}')
+            print_error_while('grabbing image from clipboard.', e)
 
     def align_center_last_paragraph(self):
         last_paragraph = self.document.paragraphs[-1]
         last_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
+    def add_screenshot_to_document(self):
+        try:
+            self.document.add_picture(self.config.temp_image_file, width=docx.shared.Inches(6))
+
+            self.align_center_last_paragraph()
+
+            self.screenshots_counter += 1
+            self.document.add_paragraph(f'{self.config.caption} {self.screenshots_counter}', style='Body Text')
+            self.align_center_last_paragraph()
+
+            print_pos(f'Screenshot №{self.screenshots_counter} saved')
+        except Exception as e:
+            print_error_while('saving screenshot to document.', e)
+
     def on_screenshot(self):
         self.clear_clipboard()
-
-        self.screenshots_counter += 1
         self.save_photo_from_clipboard()
-
-        self.document.add_picture(self.config.temp_image_file, width=docx.shared.Inches(6))
-        self.align_center_last_paragraph()
-
-        self.document.add_paragraph(f'{self.config.caption} {self.screenshots_counter}', style='Body Text')
-        self.align_center_last_paragraph()
-
-        print_pos(f'Screenshot №{self.screenshots_counter} saved')
-
+        self.add_screenshot_to_document()
         self.save_document()
         self.delete_temp_photo()
 
