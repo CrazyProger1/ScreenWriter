@@ -1,0 +1,1 @@
+"venv/scripts/pyinstaller" -F -i monitor.ico main.py
