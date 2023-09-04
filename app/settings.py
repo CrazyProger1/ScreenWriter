@@ -1,7 +1,7 @@
 from app.utils import settings
 
 
-class Settings(settings.TOMLSettings):
+class SettingsSchema(settings.SettingsSchema):
     out_file: str = 'out.docx'
     create_new_file: bool = False
     temp_image_file: str = 'temp.png'
@@ -15,3 +15,4 @@ class Settings(settings.TOMLSettings):
     paste_text_from_clipboard_shortcut: str = 'Ctrl + Shift + V'
     clear_document_shortcut: str = 'Ctrl + Shift + P'
     setup_shortcut: str = 'Ctrl + Shift + S'
+

@@ -1,6 +1,7 @@
 import os
 from abc import ABC, abstractmethod
 from typing import get_type_hints
+from enum import Enum
 
 import toml
 from pydantic import BaseModel
@@ -12,40 +13,40 @@ from .exceptions import (
 )
 
 
-class Settings(ABC, BaseModel):
+class SettingsSchema(BaseModel):
+    pass
 
-    @classmethod
+
+class SettingsLoader(ABC):
+
     @abstractmethod
-    def load(cls, file: str) -> 'Settings': ...
+    def load(self, file: str) -> 'SettingsLoader': ...
 
     @abstractmethod
-    def save(self, file: str) -> None: ...
+    def save(self, file: str, obj: SettingsSchema) -> None: ...
 
 
-class TOMLSettings(Settings):
-    def __init__(self, **data):
-        super(TOMLSettings, self).__init__(**data)
+class TOMLSettingsLoader(SettingsLoader):
+    def __init__(self, schema: type[SettingsSchema]):
+        self.__schema = schema
 
-    def __validate_curr_values(self):
-        cls = self.__class__
-        annotations = get_type_hints(cls)
+    def __validate_curr_values(self, obj: SettingsSchema):
+        annotations = get_type_hints(obj.__class__)
         for field, value in self.__dict__.items():
             typehint = annotations.get(field)
             if not isinstance(value, typehint):
                 raise SettingsEncodeError(f'Field {field} has wrong type value, it should be {typehint.__name__}')
 
-    @classmethod
-    def __validate_field_types(cls):
-        annotations = get_type_hints(cls)
+    def __validate_field_types(self):
+        annotations = get_type_hints(self.__schema)
         dumpable_types = set(toml.TomlEncoder().dump_funcs.keys())
 
         for field, typehint in annotations.items():
             if typehint not in dumpable_types:
                 raise SettingsSchemaError(f'Field {field} has undumpable type')
 
-    @classmethod
-    def load(cls, file: str) -> 'TOMLSettings':
-        cls.__validate_field_types()
+    def load(self, file: str) -> 'SettingsSchema':
+        self.__validate_field_types()
 
         if not os.path.isfile(file):
             raise FileNotFoundError(f'File {file} not found')
@@ -54,13 +55,16 @@ class TOMLSettings(Settings):
         except toml.TomlDecodeError:
             raise SettingsDecodeError(f'File {file} has incorrect format, it should be toml')
 
-        return cls.model_validate(data)
+        return self.__schema.model_validate(data)
 
-    def save(self, file: str) -> None:
-        self.__validate_curr_values()
+    def save(self, file: str, obj: SettingsSchema) -> None:
+        if not isinstance(obj, SettingsSchema):
+            raise TypeError('obj must be instance of SettingsSchema')
+
+        self.__validate_curr_values(obj)
 
         try:
-            data = self.model_dump()
+            data = obj.model_dump()
         except TypeError:
             raise SettingsEncodeError('Encode error')
 
