@@ -1,0 +1,13 @@
+out_file = "out.docx"
+create_new_file = false
+temp_image_file = "temp.png"
+font = "Times New Roman"
+font_size = 14
+caption = "Рис."
+task_header = "Завдання №"
+screenshot_shortcut = "Shift + Windows + S"
+exit_shortcut = "Ctrl + Q"
+add_task_header_shortcut = "Ctrl + Space"
+paste_text_from_clipboard_shortcut = "Ctrl + Shift + V"
+clear_document_shortcut = "Ctrl + Shift + P"
+setup_shortcut = "Ctrl + Shift + S"
