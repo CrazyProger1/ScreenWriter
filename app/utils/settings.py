@@ -33,6 +33,8 @@ class TOMLSettingsLoader(SettingsLoader):
     def __validate_curr_values(self, obj: SettingsSchema):
         annotations = get_type_hints(obj.__class__)
         for field, value in self.__dict__.items():
+            if field == '_TOMLSettingsLoader__schema':
+                continue
             typehint = annotations.get(field)
             if not isinstance(value, typehint):
                 raise SettingsEncodeError(f'Field {field} has wrong type value, it should be {typehint.__name__}')
@@ -40,9 +42,10 @@ class TOMLSettingsLoader(SettingsLoader):
     def __validate_field_types(self):
         annotations = get_type_hints(self.__schema)
         dumpable_types = set(toml.TomlEncoder().dump_funcs.keys())
+        dumpable_types.add(dict)
 
         for field, typehint in annotations.items():
-            if typehint not in dumpable_types:
+            if typehint not in dumpable_types and not issubclass(typehint, SettingsSchema):
                 raise SettingsSchemaError(f'Field {field} has undumpable type')
 
     def load(self, file: str) -> 'SettingsSchema':

@@ -5,6 +5,8 @@ font = "Times New Roman"
 font_size = 14
 caption = "Рис."
 task_header = "Завдання №"
+
+[shortcuts]
 screenshot_shortcut = "Shift + Windows + S"
 exit_shortcut = "Ctrl + Q"
 add_task_header_shortcut = "Ctrl + Space"

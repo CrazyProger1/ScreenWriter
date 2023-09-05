@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 
 from app.settings import SettingsSchema
 from app.utils.exceptions import SettingsDecodeError
+from app.keyboard import Keyboard
 
 from config import SETTINGS_FILE, SETTINGS_LOADER
 
@@ -15,6 +16,7 @@ class App(ABC):
         self._settings: SettingsSchema | None = None
 
         self._load_settings()
+        self._keyboard = Keyboard(self._settings)
 
     def _load_settings(self):
         try:
