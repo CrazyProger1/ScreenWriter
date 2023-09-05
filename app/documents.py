@@ -40,11 +40,18 @@ class Document:
     def save(self):
         ...
 
+    @abstractmethod
+    def stylize(self, font: str, font_size: int):
+        ...
+
 
 class DocxDocument(Document):
     def __init__(self, *args, **kwargs):
         super(DocxDocument, self).__init__(*args, **kwargs)
         self._document: docx.Document = None
+
+        self._font = 'Times New Roman'
+        self._font_size = 14
         self._load()
 
     def _load(self):
@@ -68,12 +75,14 @@ class DocxDocument(Document):
     def clear(self):
         self._document = docx.Document()
         self.save()
+        self.stylize(self._font, self._font_size)
 
     def add_header(self, text: str):
-        self._document.add_heading(text)
+        self._document.add_paragraph(text, style='Header')
+        self._align_center_last_paragraph()
 
     def add_text(self, text: str, center: bool = False):
-        self._document.add_paragraph(text)
+        self._document.add_paragraph(text,  style='Body Text')
         if center:
             self._align_center_last_paragraph()
 
@@ -86,6 +95,25 @@ class DocxDocument(Document):
 
         self._document.add_picture(file, width=docx.shared.Inches(6))
         self._align_center_last_paragraph()
+
+    def stylize(self, font: str, font_size: int):
+        print(font, font_size)
+        self._font = font
+        self._font_size = font_size
+
+        styles = self._document.styles
+
+        body_text_style = styles['Body Text']
+        paragraph_font = body_text_style.font
+        paragraph_font.name = font
+        paragraph_font.size = docx.shared.Pt(font_size)
+
+        heading_style = styles['Header']
+        heading_font = heading_style.font
+        heading_font.name = font
+        heading_font.size = docx.shared.Pt(font_size)
+        heading_font.bold = True
+        heading_font.color.rgb = docx.shared.RGBColor(0, 0, 0)
 
 
 def create_document(doctype: str, file: str) -> Document:

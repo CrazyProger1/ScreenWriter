@@ -33,13 +33,14 @@ class BaseCLI(CLI):
             status=self._theme.status_style,
         )
 
-    def print_welcome(self):
+    def _print_welcome(self):
         cli.print_colored(f'{APP} - V{VERSION}', color=self._theme.welcome_text_style)
 
-    def print_bye(self):
+    @staticmethod
+    def _print_bye():
         cli.print_status(StatusMessage.terminating.value)
 
-    def print_help(self):
+    def _print_help(self):
         print()
         shortcuts = self._settings.shortcuts
 
@@ -47,30 +48,38 @@ class BaseCLI(CLI):
             cli.print_info(getattr(ShortcutHelpMessage, name).value.format(shortcut=shortcut))
         print()
 
-    def print_screenshot_saved(self, number: int):
+    @staticmethod
+    def _print_screenshot_saved(number: int):
         cli.print_status(StatusMessage.screenshot_saved.value.format(number=number))
 
-    def print_task_header_added(self, number: int):
+    @staticmethod
+    def _print_task_header_added(number: int):
         cli.print_status(StatusMessage.task_header_added.value.format(number=number))
 
-    def print_text_pasted(self, text: str):
+    @staticmethod
+    def _print_text_pasted(text: str):
         cli.print_status(StatusMessage.text_pasted.value)
         print()
         cli.print_raw(text)
 
-    def print_document_cleared(self):
+    @staticmethod
+    def _print_document_cleared():
         cli.print_status(StatusMessage.document_cleared.value)
 
     def _register_listeners(self):
-        ScreenWriter.screenshot_added.add_listener(self.print_screenshot_saved)
-        ScreenWriter.task_header_added.add_listener(self.print_task_header_added)
-        ScreenWriter.text_form_clipboard_pasted.add_listener(self.print_text_pasted)
-        ScreenWriter.document_cleared.add_listener(self.print_document_cleared)
+        ScreenWriter.screenshot_added.add_listener(self._print_screenshot_saved)
+        ScreenWriter.task_header_added.add_listener(self._print_task_header_added)
+        ScreenWriter.text_form_clipboard_pasted.add_listener(self._print_text_pasted)
+        ScreenWriter.document_cleared.add_listener(self._print_document_cleared)
 
     def show(self):
         self._register_listeners()
-        self.print_welcome()
-        self.print_help()
+        self._print_welcome()
+        self._print_help()
 
     def destroy(self):
-        self.print_bye()
+        self._print_bye()
+
+
+def create_cli(settings: SettingsSchema):
+    return BaseCLI(settings=settings)

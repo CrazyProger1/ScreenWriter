@@ -21,11 +21,19 @@ class ScreenWriter:
             file=self._settings.document.out_file
         )
 
-        if self._settings.document.create_new_file:
-            self._document.clear()
+        self._setup_document()
 
         self._screen_number = 0
         self._task_number = 0
+
+    def _setup_document(self):
+        if self._settings.document.create_new_file:
+            self._document.clear()
+
+        self._document.stylize(
+            font=self._settings.style.font,
+            font_size=self._settings.style.font_size
+        )
 
     def _add_task_header(self):
         self._task_number += 1
