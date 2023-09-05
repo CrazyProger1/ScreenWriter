@@ -12,7 +12,7 @@ class ShortcutHelpMessage(str, Enum):
 
 class StatusMessage(str, Enum):
     exit = 'Terminating...'
-    task_header_added = 'Task header added'
+    task_header_added = 'Task header  №{number} added'
     text_pasted = 'Text pasted'
     document_cleared = 'Document cleared'
-    screenshot_saved = 'Screenshot saved'
+    screenshot_saved = 'Screenshot №{number} saved'

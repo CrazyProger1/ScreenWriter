@@ -33,7 +33,19 @@ class Printer(ABC):
         ...
 
     @abstractmethod
-    def print_status(self, status: str, formatting: dict = None):
+    def print_text_pasted(self):
+        ...
+
+    @abstractmethod
+    def print_header_added(self, number: int):
+        ...
+
+    @abstractmethod
+    def print_screenshot_saved(self, number: int):
+        ...
+
+    @abstractmethod
+    def print_bye(self):
         ...
 
 
@@ -51,13 +63,19 @@ class BasePrinter(Printer):
             cli.print_info(getattr(ShortcutHelpMessage, name).value.format(shortcut=shortcut))
         print()
 
-    def print_status(self, status: str, formatting: dict = None):
-        if formatting and not isinstance(formatting, dict):
-            raise TypeError(f'formatting must be a dict, not {type(formatting).__name__}')
+    def print_text_pasted(self):
+        cli.print_status(StatusMessage.text_pasted.value)
 
-        msg = getattr(StatusMessage, status).value
+    def print_header_added(self, number: int):
+        cli.print_status(StatusMessage.task_header_added.value.format(number=number))
 
-        if formatting:
-            msg = msg.format(**formatting)
+    def print_screenshot_saved(self, number: int):
+        cli.print_status(StatusMessage.screenshot_saved.value.format(number=number))
 
-        cli.print_status(msg)
+    def print_bye(self):
+        cli.print_status(StatusMessage.exit.value)
+
+
+def create_printer(settings: SettingsSchema, theme: ThemeSchema = ThemeSchema()) -> Printer:
+    from config import PRINTER_CLASS
+    return PRINTER_CLASS(settings=settings, theme=theme)

@@ -11,6 +11,7 @@ class ShortcutsSchema(settings.SettingsSchema):
 
 
 class SettingsSchema(settings.SettingsSchema):
+    doctype: str = 'docx'
     out_file: str = 'out.docx'
     create_new_file: bool = False
     temp_image_file: str = 'temp.png'
@@ -20,3 +21,5 @@ class SettingsSchema(settings.SettingsSchema):
     task_header: str = 'Завдання №'
 
     shortcuts: ShortcutsSchema
+
+

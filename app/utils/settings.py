@@ -13,6 +13,10 @@ from .exceptions import (
 )
 
 
+class Format(Enum):
+    TOML = 1
+
+
 class SettingsSchema(BaseModel):
     pass
 
@@ -73,3 +77,9 @@ class TOMLSettingsLoader(SettingsLoader):
 
         with open(file, 'w', encoding='utf-8') as f:
             toml.dump(data, f)
+
+
+def create_loader(fmt: Format, schema: type[SettingsSchema]) -> SettingsLoader:
+    match fmt:
+        case Format.TOML:
+            return TOMLSettingsLoader(schema=schema)
