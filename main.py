@@ -1,6 +1,6 @@
 import argparse
 
-from app import CLI
+from app import CLIApp
 
 
 def parse_args() -> argparse.Namespace:
@@ -10,5 +10,5 @@ def parse_args() -> argparse.Namespace:
 
 if __name__ == '__main__':
     args = parse_args()
-    app = CLI(args)
+    app = CLIApp(args)
     app.run()

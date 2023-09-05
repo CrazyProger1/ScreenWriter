@@ -6,12 +6,12 @@ class ShortcutHelpMessage(str, Enum):
     add_task_header_shortcut = 'Press {shortcut} to add task header'
     paste_text_from_clipboard_shortcut = 'Press {shortcut} to paste text from clipboard'
     clear_document_shortcut = 'Press {shortcut} to clear document'
-    setup_shortcut = 'Press {shortcut} to setup app'
+    setup_shortcut = 'Press {shortcut} to setup program'
     screenshot_shortcut = 'Waiting for {shortcut}...'
 
 
 class StatusMessage(str, Enum):
-    exit = 'Terminating...'
+    terminating = 'Terminating...'
     task_header_added = 'Task header  №{number} added'
     text_pasted = 'Text pasted'
     document_cleared = 'Document cleared'

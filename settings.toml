@@ -1,11 +1,18 @@
+[text]
+caption = "Рис. {number}"
+task_header = "Завдання №{number}"
+
+[others]
+temp_image_file = "temp.png"
+
+[style]
+font = "Times New Roman"
+font_size = 14
+
+[document]
 doctype = "docx"
 out_file = "out.docx"
 create_new_file = false
-temp_image_file = "temp.png"
-font = "Times New Roman"
-font_size = 14
-caption = "Рис. {number}"
-task_header = "Завдання №{number}"
 
 [shortcuts]
 exit_shortcut = "Ctrl + Q"

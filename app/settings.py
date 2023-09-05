@@ -1,7 +1,7 @@
 from app.utils import settings
 
 
-class ShortcutsSchema(settings.SettingsSchema):
+class ShortcutsSettingsSchema(settings.SettingsSchema):
     exit_shortcut: str = 'Ctrl + Q'
     add_task_header_shortcut: str = 'Ctrl + Space'
     paste_text_from_clipboard_shortcut: str = 'Ctrl + Shift + V'
@@ -10,16 +10,29 @@ class ShortcutsSchema(settings.SettingsSchema):
     screenshot_shortcut: str = 'Shift + Windows + S'
 
 
-class SettingsSchema(settings.SettingsSchema):
+class DocumentSettingsSchema(settings.SettingsSchema):
     doctype: str = 'docx'
     out_file: str = 'out.docx'
     create_new_file: bool = False
-    temp_image_file: str = 'temp.png'
+
+
+class StyleSettingsSchema(settings.SettingsSchema):
     font: str = 'Times New Roman'
     font_size: int = 14
+
+
+class TextSettingsSchema(settings.SettingsSchema):
     caption: str = 'Рис.'
     task_header: str = 'Завдання №'
 
-    shortcuts: ShortcutsSchema
+
+class OthersSettingsSchema(settings.SettingsSchema):
+    temp_image_file: str = 'temp.png'
 
 
+class SettingsSchema(settings.SettingsSchema):
+    text: TextSettingsSchema = TextSettingsSchema()
+    others: OthersSettingsSchema = OthersSettingsSchema()
+    style: StyleSettingsSchema = StyleSettingsSchema()
+    document: DocumentSettingsSchema = DocumentSettingsSchema()
+    shortcuts: ShortcutsSettingsSchema = ShortcutsSettingsSchema()

@@ -1,5 +1,5 @@
-from app.cli.cli import CLI
+from app.cli.cli import CLIApp
 
 __all__ = [
-    'CLI'
+    'CLIApp'
 ]

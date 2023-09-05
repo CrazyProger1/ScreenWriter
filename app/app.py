@@ -1,23 +1,26 @@
 import argparse
 
-from abc import ABC, abstractmethod
-
+from app.logic import ScreenWriter
 from app.utils import settings
 from app.settings import SettingsSchema
 from app.utils.exceptions import SettingsDecodeError
-from app.keyboard import Keyboard
 
 from config import SETTINGS_FILE, SETTINGS_FMT
 
 
-class App(ABC):
+class App:
+    """App facade"""
+
     def __init__(self, clargs: argparse.Namespace):
         self._args = clargs
         self._settings_loader = settings.create_loader(SETTINGS_FMT, SettingsSchema)
         self._settings: SettingsSchema | None = None
 
         self._load_settings()
-        self._keyboard = Keyboard(self._settings)
+
+        self._worker = ScreenWriter(
+            settings=self.settings
+        )
 
     def _load_settings(self):
         try:
@@ -34,6 +37,6 @@ class App(ABC):
     def args(self) -> argparse.Namespace:
         return self._args
 
-    @abstractmethod
     def run(self):
-        ...
+        self._worker.run()
+        self._settings_loader.save(SETTINGS_FILE, self.settings)
