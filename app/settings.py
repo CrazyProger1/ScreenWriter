@@ -22,8 +22,8 @@ class StyleSettingsSchema(settings.SettingsSchema):
 
 
 class TextSettingsSchema(settings.SettingsSchema):
-    caption: str = 'Рис.'
-    task_header: str = 'Завдання №'
+    caption: str = 'Рис.{number}'
+    task_header: str = 'Завдання №{number}'
 
 
 class OthersSettingsSchema(settings.SettingsSchema):

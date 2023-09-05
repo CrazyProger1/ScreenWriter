@@ -97,7 +97,6 @@ class DocxDocument(Document):
         self._align_center_last_paragraph()
 
     def stylize(self, font: str, font_size: int):
-        print(font, font_size)
         self._font = font
         self._font_size = font_size
 

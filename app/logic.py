@@ -4,6 +4,7 @@ from app.keyboard import Keyboard
 from app.documents import create_document
 from app.settings import SettingsSchema
 from app.utils import clipboard, observer
+from config import SETTINGS_FILE
 
 
 class ScreenWriter:
@@ -68,6 +69,7 @@ class ScreenWriter:
         self.document_cleared()
 
     def _setup(self):
+        os.system(f'notepad {SETTINGS_FILE}')
         self.setup()
 
     def _on_shortcut_pressed(self, shortcut: str):
