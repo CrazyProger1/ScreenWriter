@@ -2,12 +2,12 @@ from app.utils import settings
 
 
 class ShortcutsSchema(settings.SettingsSchema):
-    screenshot_shortcut: str = 'Shift + Windows + S'
     exit_shortcut: str = 'Ctrl + Q'
     add_task_header_shortcut: str = 'Ctrl + Space'
     paste_text_from_clipboard_shortcut: str = 'Ctrl + Shift + V'
     clear_document_shortcut: str = 'Ctrl + Shift + P'
     setup_shortcut: str = 'Ctrl + Shift + S'
+    screenshot_shortcut: str = 'Shift + Windows + S'
 
 
 class SettingsSchema(settings.SettingsSchema):

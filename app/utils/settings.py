@@ -33,7 +33,7 @@ class TOMLSettingsLoader(SettingsLoader):
     def __validate_curr_values(self, obj: SettingsSchema):
         annotations = get_type_hints(obj.__class__)
         for field, value in self.__dict__.items():
-            if field == '_TOMLSettingsLoader__schema':
+            if field == f'_{self.__class__.__name__}__schema':
                 continue
             typehint = annotations.get(field)
             if not isinstance(value, typehint):

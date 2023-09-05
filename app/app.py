@@ -1,18 +1,17 @@
 import argparse
-import os
 from abc import ABC, abstractmethod
 
 from app.settings import SettingsSchema
 from app.utils.exceptions import SettingsDecodeError
 from app.keyboard import Keyboard
 
-from config import SETTINGS_FILE, SETTINGS_LOADER
+from config import SETTINGS_FILE, SETTINGS_LOADER_CLASS
 
 
 class App(ABC):
-    def __init__(self, args: argparse.Namespace):
-        self._args = args
-        self._settings_loader = SETTINGS_LOADER(SettingsSchema)
+    def __init__(self, clargs: argparse.Namespace):
+        self._args = clargs
+        self._settings_loader = SETTINGS_LOADER_CLASS(SettingsSchema)
         self._settings: SettingsSchema | None = None
 
         self._load_settings()

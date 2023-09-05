@@ -7,9 +7,9 @@ caption = "Рис."
 task_header = "Завдання №"
 
 [shortcuts]
-screenshot_shortcut = "Shift + Windows + S"
 exit_shortcut = "Ctrl + Q"
 add_task_header_shortcut = "Ctrl + Space"
 paste_text_from_clipboard_shortcut = "Ctrl + Shift + V"
 clear_document_shortcut = "Ctrl + Shift + P"
 setup_shortcut = "Ctrl + Shift + S"
+screenshot_shortcut = "Shift + Windows + S"
