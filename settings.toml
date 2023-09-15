@@ -10,7 +10,7 @@ font = "Times New Roman"
 font_size = 14
 
 [document]
-doctype = "docx"
+doctype = "у"
 out_file = "out.docx"
 create_new_file = false
 

@@ -19,6 +19,10 @@ class ClipboardEmptyError(ScreenWriterError):
     pass
 
 
+class DocumentError(ScreenWriterError):
+    pass
+
+
 @dataclass
 class KeyboardError(Exception):
     message: str

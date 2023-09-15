@@ -1,10 +1,10 @@
 import argparse
+from time import sleep
 
 from app.logic import ScreenWriter
 from app.utils import settings
 from app.settings import SettingsSchema
 from app.utils.exceptions import SettingsDecodeError
-
 from config import SETTINGS_FILE, SETTINGS_FMT
 
 
@@ -42,6 +42,13 @@ class App:
         self._settings = SettingsSchema()
         self._settings_loader.save(SETTINGS_FILE, self._settings)
 
+    @staticmethod
+    def _on_critical_error(e):
+        for i in range(5, 0, -1):
+            print('.' * i)
+            sleep(1)
+
     def run(self):
+        self._worker.critical_error_occurred.add_listener(self._on_critical_error)
         self._worker.run()
-        self._settings_loader.save(SETTINGS_FILE, self.settings)
+        # self._settings_loader.save(SETTINGS_FILE, self.settings)

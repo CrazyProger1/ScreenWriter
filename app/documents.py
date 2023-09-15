@@ -118,4 +118,5 @@ class DocxDocument(Document):
 def create_document(doctype: str, file: str) -> Document:
     from config import DOCUMENT_CLASSES
     cls = DOCUMENT_CLASSES.get(doctype)
-    return cls(file)
+    if cls:
+        return cls(file)

@@ -7,12 +7,13 @@ from app.exceptions import (
     ScreenWriterError,
     SetupError,
     ClipboardEmptyError,
-    KeyboardError
+    KeyboardError,
+    DocumentError
 )
 from app.keyboard import Keyboard
 from app.settings import SettingsSchema
 from app.utils import clipboard, observer
-from config import SETTINGS_FILE
+from config import SETTINGS_FILE, DOCUMENT_CLASSES
 
 
 class ScreenWriter:
@@ -22,20 +23,28 @@ class ScreenWriter:
     document_cleared = observer.Event()
     setup = observer.Event()
     error_occurred = observer.Event()
+    critical_error_occurred = observer.Event()
     reset_settings = observer.Event()
 
     def __init__(self, settings: SettingsSchema):
         self._settings = settings
         self._keyboard = Keyboard(self._settings)
+
+        self._document = None
+
+        self._screen_number = 0
+        self._task_number = 0
+
+    def _initialize_document(self):
         self._document = create_document(
             doctype=self._settings.document.doctype,
             file=self._settings.document.out_file
         )
-
+        if not self._document:
+            raise DocumentError(
+                f'Document type {self._settings.document.doctype} is invalid. Supported types: '
+                f'{", ".join(DOCUMENT_CLASSES.keys())}')
         self._setup_document()
-
-        self._screen_number = 0
-        self._task_number = 0
 
     @catch_error(ScreenWriterError, error_occurred)
     def _setup_document(self):
@@ -135,6 +144,8 @@ class ScreenWriter:
     @catch_error(ScreenWriterError, error_occurred)
     def run(self):
         try:
+            self._initialize_document()
+
             self._keyboard.shortcut_pressed.add_listener(self._on_shortcut_pressed)
             self._keyboard.error_occurred.add_listener(self.error_occurred)
             self._keyboard.reset_settings.add_listener(self.reset_settings)
@@ -147,7 +158,9 @@ class ScreenWriter:
                 raise ScreenWriterError(e.message)
 
             self._try_save()
+        except DocumentError as e:
+            self.critical_error_occurred(e)
         except ScreenWriterError:
             raise
-        except Exception:
-            raise ScreenWriterError('Some unhandled error occurred, try to restart the application')
+        except Exception as e:
+            self.critical_error_occurred(e)

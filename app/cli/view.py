@@ -71,11 +71,17 @@ class BaseCLI(CLI):
 
     @staticmethod
     def _print_error(error: ScreenWriterError):
-        cli.print_neg(error)
+        cli.print_neg(error.message)
 
     @staticmethod
     def _print_settings_reset():
         cli.print_status(StatusMessage.settings_reset.value)
+
+    @staticmethod
+    def _print_critical_error(error: ScreenWriterError):
+        if isinstance(error, ScreenWriterError):
+            return cli.print_neg(error.message)
+        cli.print_neg('Some unhandled error occurred, try to restart the application')
 
     def _register_listeners(self):
         ScreenWriter.screenshot_added.add_listener(self._print_screenshot_saved)
@@ -84,6 +90,7 @@ class BaseCLI(CLI):
         ScreenWriter.document_cleared.add_listener(self._print_document_cleared)
         ScreenWriter.error_occurred.add_listener(self._print_error)
         ScreenWriter.reset_settings.add_listener(self._print_settings_reset)
+        ScreenWriter.critical_error_occurred.add_listener(self._print_critical_error)
 
     def show(self):
         self._register_listeners()
