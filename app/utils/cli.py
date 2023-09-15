@@ -2,6 +2,8 @@ from typing import Iterable, Callable
 
 import colorama
 
+colorama.init()
+
 styles = {
     'positive': colorama.Fore.GREEN,
     'negative': colorama.Fore.RED,

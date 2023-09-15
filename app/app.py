@@ -21,6 +21,7 @@ class App:
         self._worker = ScreenWriter(
             settings=self.settings
         )
+        self._worker.reset_settings.add_listener(self.reset_settings)
 
     def _load_settings(self):
         try:
@@ -36,6 +37,10 @@ class App:
     @property
     def args(self) -> argparse.Namespace:
         return self._args
+
+    def reset_settings(self):
+        self._settings = SettingsSchema()
+        self._settings_loader.save(SETTINGS_FILE, self._settings)
 
     def run(self):
         self._worker.run()

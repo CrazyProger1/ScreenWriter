@@ -82,7 +82,7 @@ class DocxDocument(Document):
         self._align_center_last_paragraph()
 
     def add_text(self, text: str, center: bool = False):
-        self._document.add_paragraph(text,  style='Body Text')
+        self._document.add_paragraph(text, style='Body Text')
         if center:
             self._align_center_last_paragraph()
 

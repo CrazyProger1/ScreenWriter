@@ -4,7 +4,8 @@ from app.logic import ScreenWriter
 from app.utils import cli
 from app.cli.msgs import StatusMessage, ShortcutHelpMessage
 from app.cli.theme import ThemeSchema
-from config import APP, VERSION
+from app.exceptions import ScreenWriterError
+from config import APP, VERSION, RESET_SETTINGS_SHORTCUT
 
 
 class CLI(ABC):
@@ -44,6 +45,8 @@ class BaseCLI(CLI):
         print()
         shortcuts = self._settings.shortcuts
 
+        cli.print_info(ShortcutHelpMessage.reset_settings_shortcut.value.format(shortcut=RESET_SETTINGS_SHORTCUT))
+
         for name, shortcut in shortcuts.__dict__.items():
             cli.print_info(getattr(ShortcutHelpMessage, name).value.format(shortcut=shortcut))
         print()
@@ -66,11 +69,21 @@ class BaseCLI(CLI):
     def _print_document_cleared():
         cli.print_status(StatusMessage.document_cleared.value)
 
+    @staticmethod
+    def _print_error(error: ScreenWriterError):
+        cli.print_neg(error)
+
+    @staticmethod
+    def _print_settings_reset():
+        cli.print_status(StatusMessage.settings_reset.value)
+
     def _register_listeners(self):
         ScreenWriter.screenshot_added.add_listener(self._print_screenshot_saved)
         ScreenWriter.task_header_added.add_listener(self._print_task_header_added)
         ScreenWriter.text_form_clipboard_pasted.add_listener(self._print_text_pasted)
         ScreenWriter.document_cleared.add_listener(self._print_document_cleared)
+        ScreenWriter.error_occurred.add_listener(self._print_error)
+        ScreenWriter.reset_settings.add_listener(self._print_settings_reset)
 
     def show(self):
         self._register_listeners()

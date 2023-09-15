@@ -1,7 +1,15 @@
 import os
 
-from app.keyboard import Keyboard
 from app.documents import create_document
+from app.exceptions import (
+    DocumentSavingError,
+    catch_error,
+    ScreenWriterError,
+    SetupError,
+    ClipboardEmptyError,
+    KeyboardError
+)
+from app.keyboard import Keyboard
 from app.settings import SettingsSchema
 from app.utils import clipboard, observer
 from config import SETTINGS_FILE
@@ -13,6 +21,8 @@ class ScreenWriter:
     text_form_clipboard_pasted = observer.Event()
     document_cleared = observer.Event()
     setup = observer.Event()
+    error_occurred = observer.Event()
+    reset_settings = observer.Event()
 
     def __init__(self, settings: SettingsSchema):
         self._settings = settings
@@ -27,51 +37,83 @@ class ScreenWriter:
         self._screen_number = 0
         self._task_number = 0
 
+    @catch_error(ScreenWriterError, error_occurred)
     def _setup_document(self):
-        if self._settings.document.create_new_file:
-            self._document.clear()
+        try:
+            if self._settings.document.create_new_file:
+                self._document.clear()
 
-        self._document.stylize(
-            font=self._settings.style.font,
-            font_size=self._settings.style.font_size
-        )
+            self._document.stylize(
+                font=self._settings.style.font,
+                font_size=self._settings.style.font_size
+            )
+        except Exception as e:
+            raise ScreenWriterError(
+                'An error occurred while trying to stylize the document. Check if your style is correct'
+            )
 
+    @catch_error(ScreenWriterError, error_occurred)
     def _add_task_header(self):
         self._task_number += 1
         text = self._settings.text.task_header.format(number=self._task_number)
         self._document.add_header(text)
         self.task_header_added(self._task_number)
 
+    @catch_error(ScreenWriterError, error_occurred)
     def _add_screenshot(self):
-        clipboard.clear()
-        self._screen_number += 1
-        file = self._settings.others.temp_image_file
-        if os.path.isfile(file):
-            os.remove(file)
+        try:
+            clipboard.clear()
 
-        clipboard.save_screenshot(file)
-        self._document.add_picture(file)
-        self._document.add_text(self._settings.text.caption.format(number=self._screen_number), center=True)
-        if os.path.isfile(file):
-            os.remove(file)
+            file = self._settings.others.temp_image_file
+            if os.path.isfile(file):
+                os.remove(file)
 
-        self.screenshot_added(self._screen_number)
+            clipboard.save_screenshot(file)
+            self._document.add_picture(file)
+            self._screen_number += 1
+            self._document.add_text(self._settings.text.caption.format(number=self._screen_number), center=True)
+            if os.path.isfile(file):
+                os.remove(file)
 
+            self.screenshot_added(self._screen_number)
+        except Exception as e:
+            raise ScreenWriterError(
+                'An error occurred while trying to grab screenshot from clipboard. Please try again')
+
+    @catch_error(ScreenWriterError, error_occurred)
     def _paste_text_from_clipboard(self):
         text = clipboard.read()
-        self._document.add_text(text)
-        self.text_form_clipboard_pasted(text)
+        if text:
+            self._document.add_text(text)
+            self.text_form_clipboard_pasted(text)
+        else:
+            raise ClipboardEmptyError('Clipboard is empty')
 
+    @catch_error(ScreenWriterError, error_occurred)
     def _clear_document(self):
         self._document.clear()
         self._task_number = 0
         self._screen_number = 0
         self.document_cleared()
 
+    @catch_error(ScreenWriterError, error_occurred)
     def _setup(self):
-        os.system(f'notepad {SETTINGS_FILE}')
+        try:
+            os.system(f'notepad {SETTINGS_FILE}')
+        except Exception as e:
+            raise SetupError('Failed to open the settings file. Please try again')
         self.setup()
 
+    @catch_error(ScreenWriterError, error_occurred)
+    def _try_save(self):
+        try:
+            self._document.save()
+        except PermissionError:
+            raise DocumentSavingError(
+                message='An error occurred while trying to save file. Check that the file is closed'
+            )
+
+    @catch_error(ScreenWriterError, error_occurred)
     def _on_shortcut_pressed(self, shortcut: str):
         shortcuts = self._settings.shortcuts
 
@@ -88,14 +130,24 @@ class ScreenWriter:
         if handler:
             handler()
 
-        self._document.save()
+        self._try_save()
 
+    @catch_error(ScreenWriterError, error_occurred)
     def run(self):
-        self._keyboard.shortcut_pressed.add_listener(self._on_shortcut_pressed)
-
         try:
-            self._keyboard.listen()
-        except KeyboardInterrupt:
-            pass
+            self._keyboard.shortcut_pressed.add_listener(self._on_shortcut_pressed)
+            self._keyboard.error_occurred.add_listener(self.error_occurred)
+            self._keyboard.reset_settings.add_listener(self.reset_settings)
 
-        self._document.save()
+            try:
+                self._keyboard.listen()
+            except KeyboardInterrupt:
+                pass
+            except KeyboardError as e:
+                raise ScreenWriterError(e.message)
+
+            self._try_save()
+        except ScreenWriterError:
+            raise
+        except Exception:
+            raise ScreenWriterError('Some unhandled error occurred, try to restart the application')
