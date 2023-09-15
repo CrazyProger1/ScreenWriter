@@ -108,7 +108,7 @@ class ScreenWriter:
     @catch_error(ScreenWriterError, error_occurred)
     def _setup(self):
         try:
-            os.system(f'notepad {SETTINGS_FILE}')
+            os.system(f'start notepad {SETTINGS_FILE}')
         except Exception as e:
             raise SetupError('Failed to open the settings file. Please try again')
         self.setup()
@@ -159,6 +159,7 @@ class ScreenWriter:
 
             self._try_save()
         except DocumentError as e:
+            self._setup()
             self.critical_error_occurred(e)
         except ScreenWriterError:
             raise
