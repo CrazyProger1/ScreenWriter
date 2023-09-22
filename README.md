@@ -6,7 +6,13 @@
 
 ScreenWriter is a simple util that makes your daily life at university easier.
 
+## GUI
+
+![GUI](res/gui.png)
+
 ## Installation
+
+To install, just download ScreenWriter's executable [file]() and place it in a convenient place.
 
 ## License
 

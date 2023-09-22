@@ -1,5 +1,7 @@
 import os
 
+from loguru import logger
+
 from app.documents import create_document
 from app.exceptions import (
     DocumentSavingError,
@@ -40,11 +42,13 @@ class ScreenWriter:
             doctype=self._settings.document.doctype,
             file=self._settings.document.out_file
         )
+
         if not self._document:
             raise DocumentError(
                 f'Document type {self._settings.document.doctype} is invalid. Supported types: '
                 f'{", ".join(DOCUMENT_CLASSES.keys())}')
         self._setup_document()
+        logger.info('Document initialized')
 
     @catch_error(ScreenWriterError, error_occurred)
     def _setup_document(self):

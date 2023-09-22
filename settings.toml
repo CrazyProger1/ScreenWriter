@@ -11,7 +11,7 @@ font_size = 14
 
 [document]
 doctype = "docx"
-out_file = "out.docx"
+out_file = "D:/out.docx"
 create_new_file = false
 
 [shortcuts]

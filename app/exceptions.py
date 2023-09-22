@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Callable
 
+from loguru import logger
+
 
 @dataclass
 class ScreenWriterError(Exception):
@@ -34,6 +36,7 @@ def catch_error(error_type: type[Exception], handler: Callable = None):
             try:
                 return func(*args, **kwargs)
             except error_type as e:
+                logger.error(e)
                 if handler:
                     handler(e)
 

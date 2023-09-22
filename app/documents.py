@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 import docx
 import pathvalidate
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from loguru import logger
 
 
 class Document:
@@ -11,8 +12,9 @@ class Document:
         if not isinstance(file, str):
             raise TypeError(f'file must be string, not {type(file).__name__}')
 
-        if not pathvalidate.is_valid_filename(file):
-            raise ValueError('file must be valid filepath')
+        if not pathvalidate.is_valid_filepath(file, pathvalidate.Platform.WINDOWS):
+            logger.error(f'Document path {file} not valid')
+            raise ValueError(f'Document path {file} not valid')
 
         self._file = file
 
@@ -119,4 +121,6 @@ def create_document(doctype: str, file: str) -> Document:
     from config import DOCUMENT_CLASSES
     cls = DOCUMENT_CLASSES.get(doctype)
     if cls:
+        logger.info(f'Creating document: {doctype}')
         return cls(file)
+    raise ValueError(f'Document type {doctype} not supported')
