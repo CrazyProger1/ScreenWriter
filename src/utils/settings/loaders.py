@@ -31,8 +31,15 @@ class TOMLLoader(Loader):
     @classmethod
     @typechecked
     def load(cls, schema: type[BaseModel], file: str) -> BaseModel:
-        data = toml.load(file)
-        print(data)
+        if not os.path.isfile(file):
+            raise FileNotFoundError(f'File {file} not found')
+
+        try:
+            data = toml.load(file)
+        except toml.TomlDecodeError:
+            raise
+
+        return schema.model_validate(data)
 
     @classmethod
     @typechecked
@@ -41,7 +48,7 @@ class TOMLLoader(Loader):
 
 
 @cache
-def get_loader(fmt: Format, file: str) -> type[Loader] | None:
+def get_loader(fmt: Format, file: str, raise_exception: bool = False) -> type[Loader] | None:
     ext = os.path.splitext(file)[1]
     for loader in Loader.__subclasses__():
         if not fmt:
@@ -50,3 +57,9 @@ def get_loader(fmt: Format, file: str) -> type[Loader] | None:
         else:
             if loader.format == fmt:
                 return loader
+
+    if raise_exception:
+        raise ValueError(
+            f"Loader can't be detected for file {file} with format {fmt}, "
+            f"try specifying valid format or loader directly"
+        )

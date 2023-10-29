@@ -16,7 +16,7 @@ def load(
         loader: type[Loader] | None = None
 ):
     if not loader:
-        loader = get_loader(fmt=fmt, file=file)
+        loader = get_loader(fmt=fmt, file=file, raise_exception=True)
     return loader.load(schema=schema, file=file)
 
 
@@ -28,5 +28,5 @@ def save(
         loader: type[Loader] | None = None
 ):
     if not loader:
-        loader = get_loader(fmt=fmt, file=file)
+        loader = get_loader(fmt=fmt, file=file, raise_exception=True)
     return loader.save(instance=instance, file=file)

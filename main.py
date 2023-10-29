@@ -1,7 +1,9 @@
 from src.utils.settings import load
 from src.settings import SettingsSchema
 
-load(
+obj = load(
     schema=SettingsSchema,
     file='pyproject.toml'
 )
+
+print(obj)
