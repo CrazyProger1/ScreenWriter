@@ -168,3 +168,7 @@ task.docx
 
 # Old files
 patterns
+
+
+# Ruff
+.ruff_cache
