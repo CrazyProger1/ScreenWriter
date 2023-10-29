@@ -1,16 +1,15 @@
 import argparse
+import os
 from time import sleep
 
 from app.logic import ScreenWriter
 from app.utils import settings
 from app.settings import SettingsSchema
 from app.utils.exceptions import SettingsDecodeError
-from config import SETTINGS_FILE, SETTINGS_FMT
+from config import SETTINGS_FILE, SETTINGS_FMT, LOG_FILE
 
 
 class App:
-    """App facade"""
-
     def __init__(self, clargs: argparse.Namespace):
         self._args = clargs
         self._settings_loader = settings.create_loader(SETTINGS_FMT, SettingsSchema)
@@ -47,6 +46,8 @@ class App:
         for i in range(5, 0, -1):
             print('.' * i)
             sleep(1)
+
+        os.system(f'notepad {LOG_FILE}')
 
     def run(self):
         self._worker.critical_error_occurred.add_listener(self._on_critical_error)
