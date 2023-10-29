@@ -3,6 +3,7 @@
     <option name="myName" value="Project Default" />
     <inspection_tool class="DuplicatedCode" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <Languages>
+        <language minSize="154" name="JavaScript" />
         <language minSize="350" name="Python" />
       </Languages>
     </inspection_tool>
@@ -15,6 +16,37 @@
         </value>
       </option>
       <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
+    <inspection_tool class="HttpUrlsUsage" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredUrls">
+        <list>
+          <option value="http://localhost" />
+          <option value="http://127.0.0.1" />
+          <option value="http://0.0.0.0" />
+          <option value="http://www.w3.org/" />
+          <option value="http://json-schema.org/draft" />
+          <option value="http://java.sun.com/" />
+          <option value="http://xmlns.jcp.org/" />
+          <option value="http://javafx.com/javafx/" />
+          <option value="http://javafx.com/fxml" />
+          <option value="http://maven.apache.org/xsd/" />
+          <option value="http://maven.apache.org/POM/" />
+          <option value="http://www.springframework.org/schema/" />
+          <option value="http://www.springframework.org/tags" />
+          <option value="http://www.springframework.org/security/tags" />
+          <option value="http://www.thymeleaf.org" />
+          <option value="http://www.jboss.org/j2ee/schema/" />
+          <option value="http://www.jboss.com/xml/ns/" />
+          <option value="http://www.ibm.com/webservices/xsd" />
+          <option value="http://activemq.apache.org/schema/" />
+          <option value="http://schema.cloudfoundry.org/spring/" />
+          <option value="http://schemas.xmlsoap.org/" />
+          <option value="http://cxf.apache.org/schemas/" />
+          <option value="http://primefaces.org/ui" />
+          <option value="http://tiles.apache.org/" />
+          <option value="http://" />
+        </list>
+      </option>
     </inspection_tool>
     <inspection_tool class="PyChainedComparisonsInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="ignoreConstantInTheMiddle" value="true" />
@@ -116,6 +148,7 @@
         <list>
           <option value="E722" />
           <option value="E275" />
+          <option value="E731" />
         </list>
       </option>
     </inspection_tool>
@@ -180,6 +213,42 @@
           <option value="cv2.VideoCapture" />
           <option value="cv2.imwrite" />
           <option value="property.capitalize" />
+          <option value="docx.shared" />
+          <option value="docx.enum" />
+          <option value="int.isdigit" />
+          <option value="docx.image" />
+          <option value="typing.Coroutine.__await__" />
+          <option value="crf.serializer.SerializerMeta.Meta" />
+          <option value="database.model.Model.Meta.fields" />
+          <option value="tbf.view.ViewMeta.Meta" />
+          <option value="crf.serializer.MetaChecker.Meta" />
+          <option value="utils.cls_utils.MetaChecker.Meta" />
+          <option value="aiogram.utils.exceptions" />
+          <option value="functools._lru_cache_wrapper" />
+          <option value="usb_hid.devices" />
+          <option value="wifi" />
+          <option value="socketpool" />
+          <option value="app.gui.main.open_dlg_modal" />
+          <option value="typing.AsyncGenerator.__await__" />
+          <option value="redis.asyncio" />
+          <option value="badusb.adafruit_hid" />
+          <option value="docx.opc.exceptions" />
+          <option value="microcontroller" />
+          <option value="badusb.user.adafruit_hid" />
+          <option value="usb_hid" />
+          <option value="badusb.keyboard.adafruit_hid" />
+          <option value="adafruit_hid" />
+          <option value="int.name" />
+          <option value="int.value" />
+          <option value="str.value" />
+          <option value="utils.enums.Value.value" />
+          <option value="utils.enums.Value.datatype" />
+          <option value="utils.enums.Value.enum_name" />
+          <option value="utils.enums.Value.name" />
+          <option value="utils.enums.IntValue.datatype" />
+          <option value="badusb._pc._pc" />
+          <option value="badusb._pc.windows._pc" />
+          <option value="badusb._pc.launch.*" />
         </list>
       </option>
     </inspection_tool>
