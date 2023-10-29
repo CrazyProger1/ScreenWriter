@@ -6,7 +6,7 @@
 
 ScreenWriter is a simple util that makes your daily life at university easier.
 
-## GUI
+## CLI
 
 ![GUI](res/gui.png)
 
