@@ -14,7 +14,7 @@ def load(
         file: str,
         fmt: Format | str | None = None,
         loader: type[Loader] | None = None
-):
+) -> BaseModel:
     if not loader:
         loader = get_loader(fmt=fmt, file=file, raise_exception=True)
     return loader.load(schema=schema, file=file)
@@ -26,7 +26,7 @@ def save(
         file: str,
         fmt: Format | str | None = None,
         loader: type[Loader] | None = None
-):
+) -> None:
     if not loader:
         loader = get_loader(fmt=fmt, file=file, raise_exception=True)
     return loader.save(instance=instance, file=file)

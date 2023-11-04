@@ -3,6 +3,7 @@ import logging
 # App
 APP = 'Screen Writer'
 VERSION = VER = '0.3'
+DEBUG = True
 
 # Logging
 LOGGING_VERBOSITY = False

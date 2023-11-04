@@ -3,10 +3,13 @@ from abc import ABC, abstractmethod
 from functools import cache
 
 import toml
+import pathvalidate
 from pydantic import BaseModel
 from typeguard import typechecked
+from loguru import logger
 
 from .enums import Format
+from .exceptions import FormatError, FileError
 
 
 class Loader(ABC):
@@ -19,7 +22,7 @@ class Loader(ABC):
 
     @classmethod
     @abstractmethod
-    def save(cls, instance: BaseModel, file: str): ...
+    def save(cls, instance: BaseModel, file: str) -> None: ...
 
 
 class TOMLLoader(Loader):
@@ -31,20 +34,44 @@ class TOMLLoader(Loader):
     @classmethod
     @typechecked
     def load(cls, schema: type[BaseModel], file: str) -> BaseModel:
+        logger.info(f'Loading {schema} from {file}')
         if not os.path.isfile(file):
             raise FileNotFoundError(f'File {file} not found')
 
         try:
             data = toml.load(file)
-        except toml.TomlDecodeError:
-            raise
+        except toml.TomlDecodeError as e:
+            logger.error(e)
+            raise FormatError(
+                fmt=cls.format,
+                msg=str(e),
+                file=file
+            )
 
-        return schema.model_validate(data)
+        instance = schema.model_validate(data)
+        logger.info(f'Loaded {instance}')
+        return instance
 
     @classmethod
     @typechecked
-    def save(cls, instance: BaseModel, file: str):
-        pass
+    def save(cls, instance: BaseModel, file: str) -> None:
+        logger.info(f'Saving instance of {instance.__class__} to {file}')
+        try:
+            pathvalidate.validate_filepath(file)
+            data = instance.model_dump(warnings=True)
+            with open(file, 'w', encoding='utf-8') as f:
+                toml.dump(data, f)
+            logger.info(f'Saved {instance}')
+        except pathvalidate.ValidationError as e:
+            logger.error(e)
+            raise FileError(
+                fmt=cls.format,
+                msg=str(e),
+                file=file
+            )
+        except Exception as e:
+            logger.error(e)
+            raise e
 
 
 @cache
