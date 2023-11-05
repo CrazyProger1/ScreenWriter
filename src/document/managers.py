@@ -2,12 +2,14 @@ import os
 from abc import ABC, abstractmethod
 
 import docx
+import pathvalidate
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from loguru import logger
 from typeguard import typechecked
 
 from .enums import Doctype
+from .exceptions import FormatError
 
 
 class DocumentManager(ABC):
@@ -59,6 +61,14 @@ class DocxDocumentManager(DocumentManager):
         last_paragraph = self._document.paragraphs[-1]
         last_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
+    def _validate_document_file(self, file: str):
+        if not pathvalidate.is_valid_filepath(file):
+            raise ValueError(f'{file} is not a valid filepath')
+
+        filetype = os.path.splitext(file)[1].lower()
+        if filetype not in self.filetypes:
+            raise FormatError(f'{filetype} filetype not supported by Docx manager')
+
     def stylize(self, **styles):
         self._prev_styles = styles
         font = styles.get('font', 'Times New Roman')
@@ -86,6 +96,8 @@ class DocxDocumentManager(DocumentManager):
 
     @typechecked
     def create(self, file: str):
+        self._validate_document_file(file=file)
+
         self.clear()
         try:
             os.remove(file)
@@ -97,12 +109,23 @@ class DocxDocumentManager(DocumentManager):
 
     @typechecked
     def save(self, file: str):
+        self._validate_document_file(file=file)
+
         self._document.save(file)
         logger.info(f'Document saved: {file}')
 
     @typechecked
     def open(self, file: str):
-        self._document = docx.Document(file)
+        if not os.path.isfile(file):
+            raise FileNotFoundError(f'File {file} not found')
+
+        self._validate_document_file(file=file)
+
+        try:
+            self._document = docx.Document(file)
+        except docx.opc.exceptions.PackageNotFoundError:
+            raise FormatError('Document has invalid format')
+
         logger.info(f'Document opened: {file}')
 
     def clear(self):

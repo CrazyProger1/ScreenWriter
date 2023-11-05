@@ -9,3 +9,7 @@ DEBUG = True
 LOGGING_VERBOSITY = True
 LOG_FILE = f'{APP.replace(" ", "_").lower()}_{VERSION}.log'
 LOGGING_LEVEL = logging.INFO
+
+# L18N
+LOCALEDIR = 'res/locales'
+DEFAULT_LANGUAGE = 'en'
