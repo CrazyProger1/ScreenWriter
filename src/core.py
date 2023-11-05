@@ -3,9 +3,9 @@ import os
 import pyperclip
 from loguru import logger
 
-from src.utils import keyboard, clipboard
+from src.utils import keyboard, clipboard, observer
 from src.context import Context
-from src.document import get_manager
+from src.document import get_manager, Doctype
 
 from config import (
     RESET_SETTINGS_SHORTCUT,
@@ -14,6 +14,16 @@ from config import (
 
 
 class Core:
+    screenshot_event = observer.Event()
+    exit_event = observer.Event()
+    open_logfile_event = observer.Event()
+    open_document_event = observer.Event()
+    open_settings_event = observer.Event()
+    clear_document_event = observer.Event()
+
+    invalid_doctype_error_event = observer.Event()
+    permission_denied_error_event = observer.Event()
+
     def __init__(self, context: Context):
         self._context = context
         self._stop = False
@@ -26,7 +36,8 @@ class Core:
         self._document_manager = get_manager(doctype=self._docsettings.doctype)
 
         if not self._document_manager:
-            pass
+            self.invalid_doctype_error_event(self._docsettings.doctype)
+            self._document_manager = get_manager(doctype=Doctype.DOCX)
 
         self._picture_counter = 0
         self._tasks_counter = 0
@@ -35,10 +46,16 @@ class Core:
         if self._docsettings.create_new_file:
             self._document_manager.create(self._outfile)
         else:
-            self._document_manager.open(self._outfile)
+            try:
+                self._document_manager.open(self._outfile)
+            except FileNotFoundError:
+                self._document_manager.create(self._outfile)
 
     def _save_document(self):
-        self._document_manager.save(self._outfile)
+        try:
+            self._document_manager.save(self._outfile)
+        except PermissionError:
+            self.permission_denied_error_event()
 
     def _register_shortcuts(self):
         shortcuts = self._context.settings.shortcuts
@@ -99,7 +116,7 @@ class Core:
         caption = self._settings.text.caption.format(number=self._picture_counter)
         clipboard.save_screenshot(file)
         self._document_manager.add_picture(file, caption=caption)
-        self._document_manager.save(self._outfile)
+        self._save_document()
 
     def run(self):
         self._open_document()
