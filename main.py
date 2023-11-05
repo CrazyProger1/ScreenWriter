@@ -1,13 +1,7 @@
-import loguru
+from src.core import Core
+from src.context import Context
 
-from src.logging import setup_logging
-
-from src.l18n import _, ErrorMessages
-
-print(_(ErrorMessages.ABC))
-
-setup_logging(loguru.logger)
-
-from src.arguments import parse_arguments
-
-print(parse_arguments())
+if __name__ == '__main__':
+    context = Context()
+    core = Core(context=context)
+    core.run()

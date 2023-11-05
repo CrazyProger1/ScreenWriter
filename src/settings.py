@@ -5,6 +5,7 @@ class ShortcutsSettingsSchema(BaseModel):
     exit_shortcut: str = 'Ctrl + Q'
     add_task_header_shortcut: str = 'Ctrl + Space'
     paste_text_from_clipboard_shortcut: str = 'Ctrl + Shift + V'
+    paste_picture_from_clipboard_shortcut: str = 'Ctrl + Shift + B'
     clear_document_shortcut: str = 'Ctrl + Shift + P'
     open_settings_shortcut: str = 'Ctrl + Shift + S'
     screenshot_shortcut: str = 'Shift + Windows + S'

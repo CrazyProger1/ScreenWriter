@@ -168,3 +168,9 @@ class DocxDocumentManager(DocumentManager):
     @property
     def current_document(self):
         return self._document
+
+
+def get_manager(doctype: Doctype | str) -> DocumentManager | None:
+    for manager in DocumentManager.__subclasses__():
+        if manager.doctype == doctype:
+            return manager()

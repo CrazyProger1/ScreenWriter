@@ -1,15 +1,16 @@
 from .managers import (
     DocxDocumentManager,
-    DocumentManager
+    DocumentManager,
+    get_manager
 )
 
 from .enums import (
     Doctype
 )
 
-
 __all__ = [
     'Doctype',
     'DocumentManager',
-    'DocxDocumentManager'
+    'DocxDocumentManager',
+    'get_manager'
 ]
