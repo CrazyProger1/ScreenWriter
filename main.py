@@ -4,22 +4,15 @@ from src.logging import setup_logging
 
 setup_logging(loguru.logger)
 
-from src.utils.keyboard import KeyboardManager
+from src.document import DocxDocumentManager
 
-mgr = KeyboardManager()
+mgr = DocxDocumentManager()
 
-
-def hello():
-    print('Hello!')
-
-
-def hello2():
-    print('Hello2!')
-
-
-mgr.register('Ctrl + O', hello)
-mgr.register('Ctrl + O', hello2)
-# mgr.unregister('Ctrl + O', hello)
-
-while 1:
-    pass
+# mgr.open('task.docx')
+mgr.create('out.docx')
+mgr.stylize(font='Times New Roman', font_size=14)
+mgr.add_picture('res/gui.png', caption='Hello, 1')
+mgr.add_paragraph('Hello, 2')
+mgr.add_heading('Hello, 3')
+mgr.save('out.docx')
+print(mgr.text)
