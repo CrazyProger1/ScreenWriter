@@ -9,6 +9,7 @@ class ShortcutsSettingsSchema(BaseModel):
     open_settings_shortcut: str = 'Ctrl + Shift + S'
     screenshot_shortcut: str = 'Shift + Windows + S'
     open_document_shortcut: str = 'Ctrl + O'
+    open_logfile_shortcut: str = 'Ctrl + Shift + L'
 
 
 class DocumentSettingsSchema(BaseModel):
