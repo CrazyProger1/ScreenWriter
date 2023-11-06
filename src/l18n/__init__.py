@@ -2,7 +2,8 @@ from .translate import _, set_language
 from .messages import (
     ErrorMessages,
     StatusMessages,
-    HelpMessages
+    HelpMessages,
+    Messages
 )
 
 __all__ = [
@@ -10,6 +11,6 @@ __all__ = [
     'set_language',
     'ErrorMessages',
     'StatusMessages',
-    'HelpMessages'
-
+    'HelpMessages',
+    'Messages'
 ]

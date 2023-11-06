@@ -172,3 +172,6 @@ patterns
 
 # Ruff
 .ruff_cache
+
+# Temp pic file
+temp.png

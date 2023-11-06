@@ -3,9 +3,10 @@ import os
 import pyperclip
 from loguru import logger
 
-from src.utils import keyboard, clipboard, observer
+from src.utils import keyboard, clipboard
 from src.context import Context
 from src.document import get_manager, Doctype
+from src.events import CoreEventChannel
 
 from config import (
     RESET_SETTINGS_SHORTCUT,
@@ -14,16 +15,6 @@ from config import (
 
 
 class Core:
-    screenshot_event = observer.Event()
-    exit_event = observer.Event()
-    open_logfile_event = observer.Event()
-    open_document_event = observer.Event()
-    open_settings_event = observer.Event()
-    clear_document_event = observer.Event()
-
-    invalid_doctype_error_event = observer.Event()
-    permission_denied_error_event = observer.Event()
-
     def __init__(self, context: Context):
         self._context = context
         self._stop = False
@@ -36,7 +27,7 @@ class Core:
         self._document_manager = get_manager(doctype=self._docsettings.doctype)
 
         if not self._document_manager:
-            self.invalid_doctype_error_event(self._docsettings.doctype)
+            CoreEventChannel.invalid_doctype_error_event(self._docsettings.doctype)
             self._document_manager = get_manager(doctype=Doctype.DOCX)
 
         self._picture_counter = 0
@@ -55,7 +46,7 @@ class Core:
         try:
             self._document_manager.save(self._outfile)
         except PermissionError:
-            self.permission_denied_error_event()
+            CoreEventChannel.permission_denied_error_event()
 
     def _register_shortcuts(self):
         shortcuts = self._context.settings.shortcuts
@@ -70,7 +61,6 @@ class Core:
             shortcuts.paste_text_from_clipboard_shortcut: self._on_paste_text,
             shortcuts.paste_picture_from_clipboard_shortcut: self._on_paste_picture,
             RESET_SETTINGS_SHORTCUT: self._on_reset_settings,
-
         }
 
         for shortcut, handler in handlers.items():
@@ -85,26 +75,36 @@ class Core:
     def _on_screenshot(self):
         self._picture_counter += 1
 
+        CoreEventChannel.screenshot_event(self._picture_counter)
+
     def _on_exit(self):
         self._stop = True
 
     def _on_open_logfile(self):
         self._open_file_via_notepad(LOG_FILE)
+        CoreEventChannel.open_logfile_event()
 
     def _on_clear_document(self):
         self._document_manager.clear()
+        CoreEventChannel.clear_document_event()
 
     def _on_open_document(self):
         self._run_file(self._docsettings.out_file)
+        CoreEventChannel.open_document_event()
 
     def _on_open_settings(self):
         self._open_file_via_notepad(self._context.arguments.settings)
+        CoreEventChannel.open_settings_event()
 
     def _on_reset_settings(self):
         self._context.reset_settings()
+        CoreEventChannel.settings_reset_event()
 
     def _on_add_task_header(self):
         self._tasks_counter += 1
+        header = self._settings.text.task_header.format(number=self._tasks_counter)
+        self._document_manager.add_heading(header)
+        self._save_document()
 
     def _on_paste_text(self):
         self._document_manager.add_paragraph(pyperclip.paste())
@@ -126,5 +126,6 @@ class Core:
                 pass
         except KeyboardInterrupt:
             pass
+        CoreEventChannel.exit_event()
 
         logger.info('Application succesefully terminated')

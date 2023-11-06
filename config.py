@@ -4,10 +4,10 @@ import logging
 APP = 'Screen Writer'
 VERSION = VER = '0.3'
 DESCRIPTION = 'ScreenWriter is a simple util that makes your daily life at university easier.'
-DEBUG = False
+DEBUG = True
 
 # Logging
-LOGGING_VERBOSITY = True
+LOGGING_VERBOSITY = False
 LOG_FILE = f'{APP.replace(" ", "_").lower()}_{VERSION}.log'
 LOGGING_LEVEL = logging.INFO
 

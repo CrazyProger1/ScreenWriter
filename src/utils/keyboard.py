@@ -25,13 +25,13 @@ class ShortcutManager:
             self._callbacks[shortcut] = [callback]
             self._register_new_shortcut(shortcut)
 
-        logger.info(f'Callback {callback} for shortcut {shortcut} registered')
+        logger.debug(f'Callback {callback} for shortcut {shortcut} registered')
 
     @typechecked
     def unregister(self, shortcut: str, callback: Callable):
         if shortcut in self._callbacks:
             try:
                 self._callbacks[shortcut].remove(callback)
-                logger.info(f'Callback {callback} for shortcut {shortcut} unregistered')
+                logger.debug(f'Callback {callback} for shortcut {shortcut} unregistered')
             except ValueError:
                 pass
