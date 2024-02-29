@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "screenwriter"
+version = "0.0.3"
+description = "ScreenWriter is a simple util that makes your daily life at university easier."
+authors = ["CrazyProger1 <crazyproger1@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+translatable-enums = "^0.0.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
