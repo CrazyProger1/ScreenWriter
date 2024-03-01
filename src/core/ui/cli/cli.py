@@ -23,9 +23,10 @@ logger = logging.getLogger(APP)
 class CLI(BaseUI):
     mode = GraphicMode.CLI
 
-    def __init__(self, arguments: BaseModel, settings: BaseModel):
+    def __init__(self, arguments: BaseModel, settings: BaseModel, context: BaseModel):
         self._arguments = arguments
         self._settings = settings
+        self._context = context
         logger.info('CLI initialized')
 
     def _print_welcome(self):
@@ -38,7 +39,7 @@ class CLI(BaseUI):
         pass
 
     def _handle_screenshot_taken(self):
-        print_positive(Message.SCREENSHOT_SAVED)
+        print_positive(Message.SCREENSHOT_SAVED.format(number=self._context.screenshot_counter))
 
     def _handle_document_opened(self):
         print_positive(Message.DOCUMENT_OPENED)

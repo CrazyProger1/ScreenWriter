@@ -7,10 +7,11 @@ from src.core.config import (
     LOGGING_FORMAT,
     DEBUG
 )
-from src.core.events import MainChannel
+
 from src.core.schemas import (
     Arguments,
-    Settings
+    Settings,
+    Context
 )
 from src.core.utils import (
     parse_arguments,
@@ -44,10 +45,14 @@ def main():
     )
     logger.info(f'Settings parsed: {settings}')
 
+    context = Context()
+    logger.info(f'Context created: {context}')
+
     ui = UIFactory.create(
         mode=GraphicMode.CLI,
         arguments=arguments,
-        settings=settings
+        settings=settings,
+        context=context
     )
     ui.run()
 
