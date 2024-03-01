@@ -11,7 +11,6 @@ from src.utils.clsutils import iter_subclasses
 
 
 class UIFactory(BaseUIFactory):
-
     @classmethod
     @typechecked
     def create(cls, mode: str | Enum, arguments: BaseModel, settings: BaseModel, context: BaseModel) -> BaseUI:

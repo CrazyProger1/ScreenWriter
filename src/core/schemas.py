@@ -14,7 +14,7 @@ class Shortcuts(BaseModel):
     screenshot: str = 'Windows + Shift + S'
 
 
-class State(BaseModel):
+class Document(BaseModel):
     current_document: str = 'document.docx'
     autoclear_document: bool = False
 
@@ -26,10 +26,15 @@ class Style(BaseModel):
     task_header_format: str = 'Завдання №{number}'
 
 
+class UI(BaseModel):
+    language: str = 'en'
+
+
 class Settings(BaseModel):
     shortcuts: Shortcuts = Shortcuts()
-    state: State = State()
+    document: Document = Document()
     style: Style = Style()
+    ui: UI = UI()
 
 
 class Arguments(BaseModel):
