@@ -1,6 +1,7 @@
 import logging
 
 from pydantic import BaseModel
+from typeguard import typechecked
 
 from src.utils.arguments import SchemedArgumentParser
 from src.utils.settings import (
@@ -11,6 +12,7 @@ from src.utils.settings import (
 )
 
 
+@typechecked
 def parse_arguments(schema: type[BaseModel]) -> BaseModel:
     parser = SchemedArgumentParser(
         schema=schema,
@@ -19,7 +21,12 @@ def parse_arguments(schema: type[BaseModel]) -> BaseModel:
     return parser.parse_schemed_args()
 
 
-def save_settings(file: str, settings: BaseModel, loader: BaseLoader = TOMLLoader(), default_file: str = None) -> None:
+@typechecked
+def save_settings(
+        file: str,
+        settings: BaseModel,
+        loader: BaseLoader = TOMLLoader(),
+        default_file: str | None = None) -> None:
     try:
         save(
             file=file,
@@ -36,11 +43,12 @@ def save_settings(file: str, settings: BaseModel, loader: BaseLoader = TOMLLoade
         raise
 
 
+@typechecked
 def load_settings(
         file: str,
         schema: type[BaseModel],
         loader: BaseLoader = TOMLLoader(),
-        default_file: str = None
+        default_file: str | None = None
 ) -> BaseModel:
     try:
         return load(

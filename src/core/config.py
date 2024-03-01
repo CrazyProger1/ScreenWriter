@@ -2,6 +2,8 @@ import logging
 
 APP = 'ScreenWriter'
 VERSION = '0.0.3'
+TITLE = f'ScreenWriter-V{VERSION}'
+DEBUG = False
 
 DEFAULT_SETTINGS_FILE = 'settings.toml'
 

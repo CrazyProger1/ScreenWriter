@@ -9,7 +9,7 @@ class Shortcuts(BaseModel):
     clear_current_document: str = 'Ctrl + Shift + C'
     paste_clipboard_content: str = 'Ctrl + Shift + V'
     open_settings: str = 'Ctrl + Shift + S'
-    clear_settings: str = 'Ctrl + Shift + R'
+    reset_settings: str = 'Ctrl + Shift + R'
     add_task_header: str = 'Ctrl + Shift + Space'
     screenshot: str = 'Windows + Shift + S'
 
@@ -34,3 +34,8 @@ class Settings(BaseModel):
 
 class Arguments(BaseModel):
     settings_file: str = 'settings.toml'
+
+
+class Context(BaseModel):
+    task_counter: int = 0
+    screenshot_counter: int = 0
