@@ -50,6 +50,9 @@ class CLI(BaseUI):
     def _handle_new_document_created(self):
         pass
 
+    def _handle_terminated(self):
+        print_info(Message.TERMINATING)
+
     def run(self):
         logger.info('CLI started')
         self._print_welcome()
@@ -58,6 +61,7 @@ class CLI(BaseUI):
         MainChannel.document_opened.subscribe(self._handle_document_opened)
         MainChannel.document_started.subscribe(self._handle_document_started)
         MainChannel.new_document_created.subscribe(self._handle_new_document_created)
+        MainChannel.terminated.subscribe(self._handle_terminated)
 
         self._print_help()
         self._print_waiting()

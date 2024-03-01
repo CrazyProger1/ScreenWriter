@@ -15,4 +15,4 @@ test:
 
 .PHONY: build
 build:
-	poetry run pyinstaller -F -w --name ScreenWriter --icon "resources/images/icons/logo.ico" --add-data="resources;." src/__main__.py
+	poetry run pyinstaller -F --name ScreenWriter --icon "resources/images/icons/logo.ico" --add-data="resources;." src/__main__.py

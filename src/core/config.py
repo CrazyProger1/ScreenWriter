@@ -1,9 +1,13 @@
 import logging
+import typeguard
 
 APP = 'ScreenWriter'
 VERSION = '0.0.3'
 TITLE = f'ScreenWriter-V{VERSION}'
-DEBUG = False
+DEBUG = True
+
+if not DEBUG:
+    typeguard.typechecked = lambda x: x
 
 DEFAULT_SETTINGS_FILE = 'settings.toml'
 

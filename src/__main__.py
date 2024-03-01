@@ -22,6 +22,7 @@ from src.core.ui import (
     UIFactory,
     GraphicMode
 )
+from src.core.core import Core
 
 
 def main():
@@ -54,7 +55,14 @@ def main():
         settings=settings,
         context=context
     )
+    core = Core(
+        arguments=arguments,
+        settings=settings,
+        context=context
+    )
+
     ui.run()
+    core.run()
 
     logger.info(f'Application terminated')
 
