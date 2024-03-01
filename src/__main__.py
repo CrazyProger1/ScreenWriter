@@ -1,45 +1,21 @@
-from src.utils.arguments import SchemedArgumentParser
-from src.utils.settings import (
-    load,
-    save,
-    TOMLLoader
-)
+from src.core.config import DEFAULT_SETTINGS_FILE
 from src.core.schemas import (
     Arguments,
     Settings
 )
-
-
-def parse_arguments() -> Arguments:
-    parser = SchemedArgumentParser(
-        schema=Arguments,
-    )
-
-    return parser.parse_schemed_args()
-
-
-def load_settings(file: str) -> Settings:
-    loader = TOMLLoader()
-    try:
-        return load(
-            file=file,
-            schema=Settings,
-            loader=loader
-        )
-    except FileNotFoundError:
-        settings = Settings()
-        save(
-            file=file,
-            instance=settings,
-            loader=loader
-        )
-
-        return settings
+from src.core.utils import (
+    parse_arguments,
+    load_settings
+)
 
 
 def main():
-    args = parse_arguments()
-    settings = load_settings(args.settings_file)
+    args = parse_arguments(schema=Arguments)
+    settings = load_settings(
+        file=args.settings_file,
+        schema=Settings,
+        default_file=DEFAULT_SETTINGS_FILE
+    )
     print(settings)
 
 
