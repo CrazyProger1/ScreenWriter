@@ -30,3 +30,7 @@ class Settings(BaseModel):
     shortcuts: Shortcuts = Shortcuts()
     state: State = State()
     style: Style = Style()
+
+
+class Arguments(BaseModel):
+    settings_file: str = 'settings.toml'
