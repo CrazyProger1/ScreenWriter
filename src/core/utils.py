@@ -1,3 +1,5 @@
+import logging
+
 from pydantic import BaseModel
 
 from src.utils.arguments import SchemedArgumentParser
@@ -55,3 +57,26 @@ def load_settings(
             default_file=default_file
         )
         return settings
+
+
+def decorate_logger(logger: logging.Logger, logging_format: str):
+    try:
+        import colorlog
+
+        formatter = colorlog.ColoredFormatter(
+            logging_format,
+            log_colors={
+                'DEBUG': 'cyan',
+                'INFO': 'green',
+                'WARNING': 'yellow',
+                'ERROR': 'red',
+                'CRITICAL': 'red,bg_white',
+            }
+        )
+
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(formatter)
+
+        logger.addHandler(stream_handler)
+    except ImportError:
+        pass

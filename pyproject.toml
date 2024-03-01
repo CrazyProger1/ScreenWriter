@@ -17,6 +17,7 @@ toml = "^0.10.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.2"
+colorlog = "^6.8.2"
 
 [build-system]
 requires = ["poetry-core"]
