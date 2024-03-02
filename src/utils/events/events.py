@@ -1,3 +1,4 @@
+import inspect
 from typing import Callable
 
 from typeguard import typechecked
@@ -37,13 +38,17 @@ class Event(BaseEvent):
             callback(*args, **kwargs)
 
     def __call__(self, *args, **kwargs):
-        pass
+        self.publish(*args, **kwargs)
 
 
 class AsyncEvent(BaseAsyncEvent, Event):
 
     async def publish(self, *args, **kwargs):
-        pass
+        for callback in self._callbacks:
+            if inspect.iscoroutinefunction(callback):
+                await callback(*args, **kwargs)
+            else:
+                callback(*args, **kwargs)
 
     async def __call__(self, *args, **kwargs):
-        pass
+        await self.publish(*args, **kwargs)
