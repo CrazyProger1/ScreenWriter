@@ -33,3 +33,7 @@ class KeyboardManager(BaseKeyboardManager):
 
     def remove_shortcut(self, shortcut: str) -> None:
         self._shortcut_callbacks.pop(shortcut, None)
+
+    def __del__(self):
+        for shortcut in self._shortcut_callbacks.keys():
+            keyboard.remove_hotkey(shortcut)

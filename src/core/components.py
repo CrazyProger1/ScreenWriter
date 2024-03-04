@@ -17,5 +17,5 @@ class Text(BaseComponent):
 
 
 @dataclass
-class Heading(BaseComponent):
+class Header(BaseComponent):
     text: str

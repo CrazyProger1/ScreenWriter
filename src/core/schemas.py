@@ -30,11 +30,16 @@ class UI(BaseModel):
     language: str = 'en'
 
 
+class Other(BaseModel):
+    temporary_file: str = 'temp.png'
+
+
 class Settings(BaseModel):
     shortcuts: Shortcuts = Shortcuts()
     document: Document = Document()
     style: Style = Style()
     ui: UI = UI()
+    other: Other = Other()
 
 
 class Arguments(BaseModel):
