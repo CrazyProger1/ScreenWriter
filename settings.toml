@@ -1,23 +1,24 @@
-[text]
-caption = "Рис.{number}"
-task_header = "Завдання №{number}"
+[shortcuts]
+exit = "Ctrl + Shift + Q"
+open_document = "Ctrl + Shift + O"
+start_current_document = "Ctrl + Shift + D"
+new_document = "Ctrl + Shift + N"
+clear_current_document = "Ctrl + Shift + C"
+paste_clipboard_content = "Ctrl + Shift + V"
+open_settings = "Ctrl + Shift + S"
+reset_settings = "Ctrl + Shift + R"
+add_task_header = "Ctrl + Shift + Space"
+screenshot = "Windows + Shift + S"
 
-[others]
-temp_image_file = "temp.png"
+[document]
+current_document = "document.docx"
+autoclear_document = false
 
 [style]
 font = "Times New Roman"
 font_size = 14
+caption_format = "Рис. {number}"
+task_header_format = "Завдання №{number}"
 
-[document]
-doctype = "docx"
-out_file = "D:/out.docx"
-create_new_file = false
-
-[shortcuts]
-exit_shortcut = "Ctrl + Q"
-add_task_header_shortcut = "Ctrl + Space"
-paste_text_from_clipboard_shortcut = "Ctrl + Shift + V"
-clear_document_shortcut = "Ctrl + Shift + P"
-setup_shortcut = "Ctrl + Shift + S"
-screenshot_shortcut = "Shift + Windows + S"
+[ui]
+language = "en"

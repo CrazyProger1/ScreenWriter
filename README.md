@@ -1,19 +1,42 @@
 # ScreenWriter
 
 <p align="center">
-  <img src="res/logo.ico"  alt="logo"/>
+  <img src="resources/images/icons/logo.ico"  alt="logo"/>
 </p>
 
-ScreenWriter is a simple util that makes your daily life at university easier.
+<p align="center">
+<a href="https://github.com/CrazyProger1/ScreenWriter/releases/download/V0.2/ScreenWriter.exe"><img alt="GitHub all releases" src="https://img.shields.io/github/downloads/CrazyProger1/ScreenWriter/total"></a>
+<a href="https://github.com/CrazyProger1/ScreenWriter/blob/master/LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/CrazyProger1/ScreenWriter"></a>
+<a href="https://github.com/CrazyProger1/ScreenWriter/releases/latest"><img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/CrazyProger1/ScreenWriter"></a>
+</p>
 
-## CLI
-
-![GUI](res/gui.png)
+ScreenWriter is a simple work-automation utility that makes your daily life at university easier. It will help you to
+build university report as fast as possible. Forget about numerating screenshots & tasks as well as pasting them into a
+Word's file.
 
 ## Installation
 
-To install, just download ScreenWriter's
-executable [file](https://github.com/CrazyProger1/ScreenWriter/releases/tag/V0.2) and place it in a convenient place.
+## Building
+
+To build the application you can use [Makefile](https://wikipedia.org/wiki/Makefile):
+
+With Poetry:
+
+```shell
+make build
+```
+
+With PIP (in venv):
+
+```shell
+make build-venv
+```
+
+Or use [Pyisntaller](https://pyinstaller.org/en/stable/) command:
+
+```shell
+pyinstaller -F --name ScreenWriter --icon "resources/images/icons/logo.ico" --add-data="resources;." src/__main__.py
+```
 
 ## License
 
