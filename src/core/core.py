@@ -7,17 +7,29 @@ from src.core.events import MainChannel
 
 from src.utils.keyboard import BaseKeyboardManager
 
+from .types import BaseDocumentManager
+
 logger = logging.getLogger(APP)
 
 
 class Core:
-    def __init__(self, arguments: BaseModel, settings: BaseModel, context: BaseModel, kbd_manager: BaseKeyboardManager):
+    def __init__(
+            self,
+            arguments: BaseModel,
+            settings: BaseModel,
+            context: BaseModel,
+            kbd_manager: BaseKeyboardManager,
+            doc_manager: BaseDocumentManager
+    ):
         self._arguments = arguments
         self._settings = settings
         self._context = context
         self._kbd_manager = kbd_manager
+        self._doc_manager = doc_manager
 
         self._running = True
+
+        self._doc_manager.open_document(self._settings.document.current_document)
 
         logger.info('Core initialized')
 

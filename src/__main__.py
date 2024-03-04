@@ -23,6 +23,7 @@ from src.core.ui import (
     GraphicMode
 )
 from src.core.core import Core
+from src.core.managers import DocumentManager
 from src.utils.keyboard import KeyboardManager
 
 
@@ -60,7 +61,8 @@ def main():
         arguments=arguments,
         settings=settings,
         context=context,
-        kbd_manager=KeyboardManager()
+        kbd_manager=KeyboardManager(),
+        doc_manager=DocumentManager()
     )
 
     ui.run()
